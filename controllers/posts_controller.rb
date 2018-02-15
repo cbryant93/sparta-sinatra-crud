@@ -33,6 +33,8 @@ class PostsController < Sinatra::Base
 # Landing page
 get '/' do
 
+  @title = "Favourite Music Artists"
+
   @posts = $posts
 
   erb :'posts/index'
@@ -42,7 +44,42 @@ end
 #Create onto index page
 post '/' do
 
+  puts params
+
+new_post = {
+  title: params[:title],
+  body: params[:body],
+}
+
+$posts.push(new_post)
+
+redirect "/"
 
 end
+
+get '/new'  do
+
+  @post = {
+    id: '',
+    title: '',
+    body: ''
+  }
+  erb :'posts/new'
+
+end
+
+get '/:id' do
+
+  # get the ID and turn it in to an integer
+  id = params[:id].to_i
+
+  # make a single post object available in the template
+  @post = $posts[id]
+
+  erb :'posts/show'
+
+end
+
+
 
 end
