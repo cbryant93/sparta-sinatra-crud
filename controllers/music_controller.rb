@@ -1,4 +1,4 @@
-class PostsController < Sinatra::Base
+class MusicController < Sinatra::Base
 
   # sets root as the parent-directory of the current file
   set :root, File.join(File.dirname(__FILE__), '..')
@@ -23,35 +23,25 @@ class PostsController < Sinatra::Base
       image: "ed.jpg"
   },
   {
-    id: 3,
+    id: 2,
     title: "Drake",
     body: "Aubrey Drake Graham (born October 24, 1986)[3] is a Canadian rapper, singer, songwriter, record producer, actor, and entrepreneur.[4][5] Drake initially gained recognition as an actor on the teen drama television series Degrassi: The Next Generation in the early 2000s. Intent on pursuing a career as a rapper, he departed the series in 2007 following the release of his debut mixtape, Room for Improvement. He released two further independent projects, Comeback Season and So Far Gone, before signing to Lil Wayne's Young Money Entertainment in June 2009.[6]",
     image: "drake.jpg"
   }];
 
 
-# Landing page
-get '/' do
 
-  @title = "Favourite Music Artists"
-
-  @posts = $posts
-
-  erb :'posts/index'
-
-end
 
 #Create onto index page
 post '/' do
 
-  puts params
-
 new_post = {
   title: params[:title],
-  body: params[:body],
+  body: params[:body]
 }
 
 $posts.push(new_post)
+
 
 redirect "/"
 
@@ -64,6 +54,11 @@ get '/new'  do
     title: '',
     body: ''
   }
+
+  @song = {
+    id: '',
+    name: ''
+  }
   erb :'posts/new'
 
 end
@@ -75,8 +70,56 @@ get '/:id' do
 
   # make a single post object available in the template
   @post = $posts[id]
+  @song = $song[params[:id].to_i][:name]
 
   erb :'posts/show'
+
+end
+
+put '/:id'  do
+
+    id = params[:id].to_i
+
+    post = $posts[id]
+    post = $posts[name]
+
+    post[:title] = params[:title]
+    post[:body] = params[:body]
+    song[:name] = params[:name]
+
+
+    $posts[id] = post
+    $song[name] = post
+
+    redirect '/'
+
+  end
+
+  delete '/:id'  do
+  id = params[:id].to_i
+
+
+  $posts.delete_at(id)
+
+
+  redirect '/'
+
+
+end
+
+get '/:id/edit'  do
+
+  id = params[:id].to_i
+
+  @song = $song[params[:id].to_i][:name]
+
+  @song = $song[name]
+
+  @post = $posts[id]
+
+
+
+  erb :'posts/edit'
 
 end
 
